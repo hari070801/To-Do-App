@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/provider/auth_provider.dart';
 import 'package:todo_app/resources/app_colors.dart';
 import 'package:todo_app/resources/functions.dart';
+import 'package:todo_app/resources/shared_prefs.dart';
 import 'package:todo_app/resources/widgets.dart';
 import 'package:todo_app/screens/home/home_screen.dart';
 import 'signup_screen.dart';
@@ -64,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   } else {
                     try {
                       await context.read<AuthProvider>().signIn(emailController.text, passwordController.text);
+                      saveLoginState();
                       Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context) {
                           return HomeScreen();

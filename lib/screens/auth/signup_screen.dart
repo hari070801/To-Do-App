@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/provider/auth_provider.dart';
 import 'package:todo_app/resources/app_colors.dart';
 import 'package:todo_app/resources/functions.dart';
+import 'package:todo_app/resources/shared_prefs.dart';
 import 'package:todo_app/resources/widgets.dart';
 import 'package:todo_app/screens/auth/login_screen.dart';
 import 'package:todo_app/screens/home/home_screen.dart';
@@ -75,6 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   } else {
                     try {
                       await context.read<AuthProvider>().signUp(emailController.text, passwordController.text);
+                      saveLoginState();
                       Widgets.showFlushBar(message: 'Sign up successful!', context: context);
                       Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context) {

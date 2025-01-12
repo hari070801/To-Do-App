@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_app/provider/auth_provider.dart';
 import 'package:todo_app/provider/task_provider.dart';
 import 'package:todo_app/resources/functions.dart';
@@ -9,6 +10,9 @@ import 'package:todo_app/screens/home/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final prefs = await SharedPreferences.getInstance();
+
   await Firebase.initializeApp();
 
   runApp(
@@ -17,16 +21,22 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => TaskProvider()..fetchTasks()),
       ],
-      child: const MyApp(),
+      child:  MyApp(
+        sharedPreferences: prefs,
+      ),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final SharedPreferences sharedPreferences;
+
+  const MyApp({super.key, required this.sharedPreferences});
 
   @override
   Widget build(BuildContext context) {
+    bool isLoggedIn = sharedPreferences.getBool('isLoggedIn') ?? false;
+
     if (MediaQuery.of(context).orientation == Orientation.portrait) {
       kHeight = MediaQuery.of(context).size.height;
       kWidth = MediaQuery.of(context).size.width;
@@ -62,7 +72,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const AuthState(),
+      home: isLoggedIn ? HomeScreen() : LoginScreen(),
     );
   }
 }
@@ -72,9 +82,12 @@ class AuthState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    user = context.watch<AuthProvider>().user!.email.toString();
+    final user = context.watch<AuthProvider>().user;
+
+    print("user : $userEmail");
 
     if (user != null) {
+      userEmail = context.watch<AuthProvider>().user?.email.toString();
       return HomeScreen();
     } else {
       return LoginScreen();

@@ -5,12 +5,13 @@ import 'package:todo_app/provider/auth_provider.dart';
 import 'package:todo_app/provider/task_provider.dart';
 import 'package:todo_app/resources/app_colors.dart';
 import 'package:todo_app/resources/functions.dart';
+import 'package:todo_app/resources/shared_prefs.dart';
 import 'package:todo_app/resources/widgets.dart';
 import 'package:todo_app/screens/auth/login_screen.dart';
 import 'package:todo_app/screens/home/add_task_bottomsheet.dart';
 import 'package:todo_app/screens/home/edit_task_bottomsheet.dart';
 
-String? user;
+String? userEmail;
 
 class HomeScreen extends StatelessWidget {
   List<Task> completedTask = [];
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             SizedBox(width: getWidgetWidth(width: 5)),
                             Text(
-                              user!,
+                              userEmail!,
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: getTextSize(fontSize: 20),
@@ -92,6 +93,7 @@ class HomeScreen extends StatelessWidget {
             ),
             onPressed: () async {
               try {
+                clearLoginState();
                 await context.read<AuthProvider>().signOut();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
