@@ -18,10 +18,10 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
         ChangeNotifierProvider(create: (_) => TaskProvider()..fetchTasks()),
       ],
-      child:  MyApp(
+      child: MyApp(
         sharedPreferences: prefs,
       ),
     ),
@@ -72,25 +72,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: isLoggedIn ? HomeScreen() : LoginScreen(),
+      home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
     );
-  }
-}
-
-class AuthState extends StatelessWidget {
-  const AuthState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = context.watch<AuthProvider>().user;
-
-    print("user : $userEmail");
-
-    if (user != null) {
-      userEmail = context.watch<AuthProvider>().user?.email.toString();
-      return HomeScreen();
-    } else {
-      return LoginScreen();
-    }
   }
 }

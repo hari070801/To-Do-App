@@ -13,17 +13,18 @@ import 'package:todo_app/screens/home/edit_task_bottomsheet.dart';
 
 String? userEmail;
 
-class HomeScreen extends StatelessWidget {
-  List<Task> completedTask = [];
-  List<Task> notCompletedTask = [];
+List<Task> completedTask = [];
+List<Task> notCompletedTask = [];
 
-  HomeScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
         title: Text(
           'To-Do',
           style: TextStyle(
@@ -94,13 +95,13 @@ class HomeScreen extends StatelessWidget {
             onPressed: () async {
               try {
                 clearLoginState();
-                await context.read<AuthProvider>().signOut();
+                await context.read<AuthenticationProvider>().signOut();
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
               } finally {
                 Navigator.pushReplacement(context, MaterialPageRoute(
                   builder: (context) {
-                    return LoginScreen();
+                    return const LoginScreen();
                   },
                 ));
               }
@@ -129,42 +130,42 @@ class HomeScreen extends StatelessWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'All Tasks',
-                        style: TextStyle(
-                          fontSize: getTextSize(fontSize: 20),
-                          fontWeight: FontWeight.w700,
-                          color: appColors.authBtnColor,
-                        ),
-                      ),
-                    ),
-                    notCompletedTask.isEmpty && completedTask.isEmpty
-                        ? SizedBox(
-                            height: getWidgetHeight(height: 100),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'No tasks yet',
-                                    style: TextStyle(
-                                      fontSize: getTextSize(fontSize: 22),
-                                      fontWeight: FontWeight.w600,
-                                      color: appColors.fontColor,
-                                    ),
-                                  ),
-                                  SizedBox(height: getWidgetHeight(height: 10)),
-                                  Text(
-                                    'Add your to-dos and keep track of them',
-                                    style: TextStyle(
-                                      fontSize: getTextSize(fontSize: 18),
-                                      fontWeight: FontWeight.w500,
-                                      color: appColors.fontColor,
-                                    ),
-                                  ),
-                                ],
+                    notCompletedTask.isEmpty
+                        ? const SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              'All Tasks',
+                              style: TextStyle(
+                                fontSize: getTextSize(fontSize: 20),
+                                fontWeight: FontWeight.w700,
+                                color: appColors.authBtnColor,
                               ),
+                            ),
+                          ),
+                    notCompletedTask.isEmpty && completedTask.isEmpty
+                        ? Center(
+                            heightFactor: getWidgetHeight(height: 10),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'No tasks yet',
+                                  style: TextStyle(
+                                    fontSize: getTextSize(fontSize: 22),
+                                    fontWeight: FontWeight.w600,
+                                    color: appColors.fontColor,
+                                  ),
+                                ),
+                                SizedBox(height: getWidgetHeight(height: 10)),
+                                Text(
+                                  'Add your to-dos and keep track of them',
+                                  style: TextStyle(
+                                    fontSize: getTextSize(fontSize: 18),
+                                    fontWeight: FontWeight.w500,
+                                    color: appColors.fontColor,
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         : notCompletedTask.isEmpty

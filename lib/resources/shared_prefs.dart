@@ -7,7 +7,7 @@ Future<void> saveLoginState() async {
 
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-  print("main isLoggedIn after login : $isLoggedIn");
+  print("isLoggedIn : $isLoggedIn");
 }
 
 Future<void> clearLoginState() async {
