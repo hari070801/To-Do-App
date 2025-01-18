@@ -83,6 +83,7 @@ class TaskProvider extends ChangeNotifier {
     try {
       await _db.child('users/${FirebaseAuth.instance.currentUser?.uid}/tasks/$taskId').update({'title': newTitle});
 
+      //locally
       final taskIndex = _tasks.indexWhere((task) => task.id == taskId);
       if (taskIndex != -1) {
         _tasks[taskIndex].title = newTitle;
